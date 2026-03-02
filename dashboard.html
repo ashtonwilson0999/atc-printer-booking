@@ -31,7 +31,7 @@
     </div>
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbCoX7xYXvt4_OE_fCOHHfrU9GX12vLCz1kjJnVKi2NLTt2bJy_M5BVI1sTe0lNk421g/exec";
-        const STAFF_PASS = "ATC_SPRING_2026";
+        const STAFF_KEY = "ATC_SPRING_2026";
         let auth = "";
         function login() { if(document.getElementById('pass').value === STAFF_PASS) { auth = STAFF_PASS; document.getElementById('login-screen').style.display = 'none'; document.getElementById('dash').style.display = 'block'; document.getElementById('dash-date').value = new Date().toLocaleDateString('en-CA'); loadData(); } else alert("Denied"); }
         async function loadData() {
@@ -46,4 +46,5 @@
         async function toggleStatus(p, s) { await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'update_status', printer: p, newStatus: s === 'ONLINE' ? 'OFFLINE' : 'ONLINE', staffKey: auth }) }); loadData(); }
     </script>
 </body>
+
 </html>
