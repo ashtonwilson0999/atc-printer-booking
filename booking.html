@@ -7,298 +7,205 @@
     <style>
         body { margin: 0; font-family: 'Inter', sans-serif; background-color: #f5f5f5; display: flex; justify-content: center; padding: 40px 20px; }
         .booking-card { background: white; max-width: 550px; width: 100%; border-radius: 20px; padding: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; position: relative; }
-        .back-link { display: block; text-align: left; text-decoration: none; color: #888; font-size: 0.9rem; margin-bottom: 20px; transition: color 0.2s; }
-        .back-link:hover { color: #000; }
-        
-        h1 { margin: 10px 0; font-size: 1.8rem; font-weight: 800; }
-        .step-label { font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 1.5px; margin: 25px 0 12px; display: block; font-weight: 700; }
-        
-        .rules-box { background-color: #fff9e6; border-left: 4px solid #f39c12; padding: 20px; margin: 20px 0; text-align: left; border-radius: 8px; }
-        .rules-box h3 { margin-top: 0; font-size: 1rem; color: #856404; }
-        .rules-box ul { margin: 10px 0 0; padding-left: 20px; font-size: 0.9rem; color: #856404; line-height: 1.5; }
-
-        .input-group { text-align: left; width: 100%; margin-bottom: 15px; }
-        input { width: 100%; padding: 14px; border: 2px solid #eee; border-radius: 12px; font-family: inherit; font-size: 1rem; box-sizing: border-box; outline: none; transition: all 0.2s; }
-        input.error-border { border-color: #cc0000 !important; background-color: #fffcfc; }
-        
-        .error-text { color: #cc0000; font-size: 0.75rem; font-weight: 600; display: none; margin-top: 5px; margin-left: 5px; }
-        .helper-text { color: #888; font-size: 0.75rem; margin-top: 5px; margin-left: 5px; display: block; }
-
-        #time-section, #info-section, #manage-section, #group-section { display: none; margin-top: 25px; border-top: 1px solid #eee; padding-top: 10px; }
-        
-        .time-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px 12px; margin-bottom: 20px; margin-top: 10px; }
-        .time-slot { 
-            position: relative; padding: 22px 10px 14px; border: 2px solid #eee; border-radius: 12px; 
-            cursor: pointer; transition: all 0.2s; font-weight: 600; font-size: 0.85rem; 
-            text-align: center; display: flex; flex-direction: column; justify-content: center;
-        }
-        .time-slot:hover { border-color: #000; background: #fafafa; }
+        .back-link { display: block; text-align: left; text-decoration: none; color: #888; font-size: 0.9rem; margin-bottom: 20px; font-weight: 600; }
+        .rules-box { background-color: #fff9e6; border-left: 4px solid #f39c12; padding: 15px; margin: 20px 0; text-align: left; border-radius: 8px; }
+        .rules-box ul { margin: 0; padding-left: 20px; font-size: 0.85rem; color: #856404; line-height: 1.5; }
+        .time-header { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; }
+        .reset-btn { background: #eee; border: none; padding: 5px 12px; border-radius: 12px; font-size: 0.7rem; cursor: pointer; font-weight: 600; color: #666; }
+        .time-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-top: 15px; }
+        .time-slot { position: relative; padding: 20px 10px; border: 2px solid #eee; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
         .time-slot.selected { background: #000; color: #fff; border-color: #000; }
-
-        .slot-badge {
-            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
-            background: #f39c12; color: white; font-size: 0.6rem; padding: 2px 8px;
-            border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px;
-            white-space: nowrap; font-weight: 800; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            z-index: 1;
-        }
-
-        .capacity-indicator { font-size: 0.65rem; color: #888; margin-top: 4px; font-weight: 400; }
-        .time-slot.selected .capacity-indicator { color: rgba(255,255,255,0.7); }
-
-        .confirm-btn { background: #000; color: white; border: none; padding: 16px 40px; border-radius: 35px; font-size: 1rem; font-weight: 700; cursor: pointer; width: 100%; margin-top: 20px; }
-        .secondary-btn { background: none; border: 1px solid #ddd; color: #888; padding: 10px 20px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; margin-top: 30px; width: 100%; }
-
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
-        .modal-content { background: white; padding: 40px; border-radius: 24px; max-width: 400px; width: 90%; text-align: center; transform: scale(0.9); transition: transform 0.3s ease; }
-        .modal-overlay.active { display: flex; }
+        .prep-package { border: 2.5px dashed #f39c12 !important; }
+        .prep-package.selected { border: 2.5px solid #f39c12 !important; }
+        .slot-badge { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #f39c12; color: white; font-size: 0.65rem; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; }
+        .confirm-btn { background: #000; color: white; border: none; padding: 16px; border-radius: 30px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 20px; }
+        .secondary-btn { background: none; border: 1px solid #ddd; color: #888; padding: 10px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; width: 100%; margin-top: 30px; }
+        input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; box-sizing: border-box; margin-bottom: 10px; font-family: inherit; }
     </style>
 </head>
 <body>
-
     <div class="booking-card">
         <a href="index.html" class="back-link">← Back to Selection</a>
-        <h1 id="printer-name">Reserve Printer</h1>
-
         <div id="booking-flow">
-            <div class="rules-box">
-                <h3>Read Before Booking</h3>
-                <ul id="printer-rules"></ul>
-            </div>
-
-            <span class="step-label">1. Choose Date</span>
-            <div class="input-group">
-                <input type="date" id="date-picker">
-                <span id="date-error" class="error-text">⚠️ Printers available Mon / Wed / Fri only</span>
-            </div>
-
-            <div id="time-section">
-                <span class="step-label">2. Select Time Slot</span>
-                <p id="slot-help-text" style="font-size: 0.75rem; color: #888; margin-bottom: 10px;"></p>
+            <h1>Reserve <span id="printer-display">Printer</span></h1>
+            <div class="rules-box"><h3>Lab Rules</h3><ul id="printer-rules"></ul></div>
+            <input type="date" id="date-picker">
+            <div id="time-section" style="display:none;">
+                <div class="time-header">
+                    <span style="font-size: 0.8rem; color: #888; font-weight: 700; text-transform: uppercase;">Available Slots</span>
+                    <button class="reset-btn" onclick="resetSlots()">Clear All</button>
+                </div>
+                <p style="font-size: 0.7rem; color: #d9534f; margin-top: 5px; text-align: left;">* Same-day bookings must be made at least 1 hour in advance.</p>
                 <div class="time-grid" id="time-grid"></div>
             </div>
-
-            <div id="info-section">
-                <span class="step-label">3. Your Information</span>
-                <div class="input-group">
-                    <input type="text" id="user-name" placeholder="Full Name">
-                    <span id="name-error" class="error-text">⚠️ Please enter your name</span>
-                </div>
-                <div id="group-section" class="input-group">
-                    <input type="text" id="group-names" placeholder="Other Group Members">
-                    <span class="helper-text">Optional: Separate names with commas</span>
-                </div>
-                <div class="input-group">
-                    <input type="email" id="user-email" placeholder="user@uark.edu">
-                    <span id="email-error" class="error-text">⚠️ Must be a valid @uark.edu address</span>
-                </div>
+            <div id="info-section" style="display:none;">
+                <input type="text" id="user-name" placeholder="Full Name">
+                <input type="email" id="user-email" placeholder="uark-email@uark.edu">
+                <div id="scara-group" style="display:none;"><input type="text" id="group-members" placeholder="Other Group Members"></div>
                 <button class="confirm-btn" onclick="handleConfirm()">Complete Reservation</button>
             </div>
-            <button class="secondary-btn" onclick="toggleManageMode(true)">Manage / Cancel Existing Booking</button>
+            <button class="secondary-btn" onclick="toggleManage(true)">Manage / Cancel Booking</button>
         </div>
 
-        <div id="manage-section">
-            <h2>Manage Booking</h2>
-            <div class="input-group"><input type="text" id="lookup-name" placeholder="Full Name"></div>
-            <div class="input-group"><input type="email" id="lookup-email" placeholder="uark.edu email"></div>
-            <button class="confirm-btn" onclick="lookupBooking()">Find My Booking</button>
-            <button class="secondary-btn" style="border:none;" onclick="toggleManageMode(false)">← Back to Calendar</button>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="success-modal">
-        <div class="modal-content">
-            <div style="font-size: 3rem; margin-bottom: 10px;">✅</div>
-            <h2 id="modal-title">Confirmed!</h2>
-            <p id="modal-details" style="color: #666; line-height: 1.5;"></p>
-            <button class="confirm-btn" onclick="window.location.href='index.html'">Done</button>
+        <div id="manage-section" style="display:none;">
+            <h1>Manage Booking</h1>
+            <input type="email" id="manage-email" placeholder="uark-email@uark.edu">
+            <button class="confirm-btn" onclick="handleManage('lookup')">Find Booking</button>
+            <div id="manage-result" style="display:none; margin-top:20px; background:#f9f9f9; padding:15px; border-radius:10px;">
+                <p id="manage-text" style="font-weight:600;"></p>
+                <button class="confirm-btn" style="background:#cc0000;" onclick="handleManage('cancel')">Cancel Booking</button>
+            </div>
+            <button class="secondary-btn" onclick="toggleManage(false)">← Back</button>
         </div>
     </div>
 
     <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbCoX7xYXvt4_OE_fCOHHfrU9GX12vLCz1kjJnVKi2NLTt2bJy_M5BVI1sTe0lNk421g/exec";
         const params = new URLSearchParams(window.location.search);
-        const printer = params.get('printer');
+        const printer = params.get('printer') || "Super7";
+        let selectedIndices = [];
 
-		// UPDATED DATA: Mix of strings and objects with labels
         const printerInfo = {
             "Super7": {
                 rules: [
-                    "<strong>Clay Preparation sessions are from 8:30 - 10:00 AM.</strong> Each day, clay tubes must be mixed and loaded for printing. Clay Preparation training is required to access the lab. All users must sign up for a training session. Completion of training the first time satisfies this requirement for future lab use. The two students who sign up for clay prep will automatically get printing time from 10:00 - 10:30 AM. This can be coordinated as a class.",
+                    "<strong>Clay Preparation is required every Monday from 9:00 - 10:00 AM.</strong> Two students will need to sign up and load clay for the week. If this is not done, the class will not have clay to print with. These two students will also automatically receive printing time from 10:00 - 10:30 AM on that day. They are welcome to book the following 30 minute slot from 10:30 - 11:00 AM if they would like a full hour of printing between the two. This can be coordinated as a group.",
 					"<strong>Printing sessions are 30-minute increments.",
                     "<strong>Students may book 30 or 60 minutes per session.",
                     "<strong>One student max per printing time slot.",
 					"<strong>Two students max per Clay Preparation slot.",
 					"<strong>Lunch (12:00 - 1:00 PM) is not bookable.",
 					"<strong>Sign up no later than one (1) hour before you plan to print.",
-					"<strong>Use the Manage/Cancel Existing Booking button at the bottom of the page to cancel or look up your appointment.</strong> Cancellations must be made at least one (1) hour in advance of your booked starting time. Enter your name and email to find and cancel your booking. If cancellation falls within a shorter time frame, try to coordinate with your classmates on another group taking your scheduled spot.",
+					"<strong>Use the Manage/Cancel Existing Booking button at the bottom of the page to cancel or look up your appointment(s).</strong> Cancellations must be made at least one (1) hour in advance of your booked starting time. Enter your name and email to find and cancel your booking. If cancellation falls within a shorter time frame, try to coordinate with your classmates on another group taking your scheduled spot.",
 					"<strong>All work must end at 4:30 PM to allow staff to begin shutting down the space and shop.</strong> Assist in any cleaning necessary at the end of your printing session.",
 					"<strong>If any other issues arise, contact atcfablab@gmail.com & we will help you as best we can."
                 ],
-                times: [{ time: "08:30 AM - 10:00 AM", label: "Clay Preparation", capacity: 2 }, "10:30 AM - 11:00 AM", "11:00 AM - 11:30 AM", "11:30 AM - 12:00 PM", "1:00 PM - 1:30 PM", "1:30 PM - 2:00 PM", "2:00 PM - 2:30 PM", "2:30 PM - 3:00 PM", "3:00 PM - 3:30 PM", "3:30 PM - 4:00 PM", "4:00 PM - 4:30 PM"]
+                mondayTimes: [
+                    { time: "09:00 AM - 10:00 AM", label: "Clay Prep" },
+                    { time: "10:00 AM - 10:30 AM", isBonus: true },
+                    "10:30 AM - 11:00 AM", "11:00 AM - 11:30 AM", "11:30 AM - 12:00 PM",
+                    "01:00 PM - 01:30 PM", "01:30 PM - 02:00 PM", "02:00 PM - 02:30 PM", "03:00 PM - 03:30 PM", "03:30 PM - 04:00 PM", "04:00 PM - 04:30 PM"
+                ],
+                defaultTimes: [
+                    "09:00 AM - 09:30 AM", "09:30 AM - 10:00 AM", "10:00 AM - 10:30 AM", "10:30 AM - 11:00 AM", "11:00 AM - 11:30 AM", "11:30 AM - 12:00 PM",
+                    "01:00 PM - 01:30 PM", "01:30 PM - 02:00 PM", "02:00 PM - 02:30 PM", "03:00 PM - 03:30 PM", "03:30 PM - 04:00 PM", "04:00 PM - 04:30 PM"
+                ]
             },
             "SCARA": {
-                rules: [
-                    "<strong>All time slots include BOTH your mixing/loading & your printing time.</strong> All time slots are two (2) hours long.",
+                rules: ["<strong>All time slots include BOTH your mixing/loading & your printing time.</strong> All time slots are two (2) hours long.",
 					"<strong>Tuesdays and Thursdays can be used for testing your mixes BEFORE booking an official time slot.</strong> These days do not have to be officially booked.",
 					"<strong>There are NO consecutive sessions - you only get one session per day per group.</strong> This is to allow as many groups as possible to print in a day.",
 					"<strong>When booking time, include your other group members' names.",
 					"<strong>Lunch (12:00 - 1:00 PM) is not bookable.",
 					"<strong>Sign up no later than one (1) hour before you plan to print.",
-					"<strong>Use the Manage/Cancel Existing Booking button at the bottom of the page to cancel or look up your appointment.</strong> Cancellations must be made at least one (1) hour in advance of your booked starting time. Enter your name and email to find and cancel your booking. If cancellation falls within a shorter time frame, try to coordinate with your classmates on another group taking your scheduled spot.",
+					"<strong>Use the Manage/Cancel Existing Booking button at the bottom of the page to cancel or look up your appointment(s).</strong> Cancellations must be made at least one (1) hour in advance of your booked starting time. Enter your name and email to find and cancel your booking. If cancellation falls within a shorter time frame, try to coordinate with your classmates on another group taking your scheduled spot.",
 					"<strong>All work must end at 4:30 PM to allow staff to begin shutting down the space and shop.</strong> Assist in any cleaning necessary at the end of your printing session.",
-					"<strong>If any other issues arise, contact atcfablab@gmail.com & we will help you as best we can."
-                ],
-                times: ["9:00 AM - 11:00 AM", "10:00 AM - 12:00 PM", "1:00 PM - 3:00 PM", "2:00 PM - 4:00 PM"]
+					"<strong>If any other issues arise, contact atcfablab@gmail.com & we will help you as best we can."],
+                times: ["09:00 AM - 11:00 AM", "10:00 AM - 12:00 PM", "01:00 PM - 03:00 PM", "02:00 PM - 04:00 PM"]
             }
         };
 
-        if (printer && printerInfo[printer]) {
-            document.getElementById('printer-name').innerText = "Reserve " + printer;
-            document.getElementById('slot-help-text').innerText = printerInfo[printer].helpText;
-            
-            const rulesList = document.getElementById('printer-rules');
-            printerInfo[printer].rules.forEach(rule => {
-                const li = document.createElement('li'); li.innerHTML = rule; rulesList.appendChild(li);
-            });
-            if (printer === "SCARA") document.getElementById('group-section').style.display = "block";
+        document.getElementById('printer-display').innerText = printer;
+        if(printer === "SCARA") document.getElementById('scara-group').style.display = 'block';
+        printerInfo[printer].rules.forEach(r => { const li = document.createElement('li'); li.innerHTML = r; document.getElementById('printer-rules').appendChild(li); });
+
+        function resetSlots() {
+            selectedIndices = [];
+            const bonus = document.getElementById('monday-bonus-slot');
+            if(bonus) bonus.style.display = 'none';
+            updateVisuals();
         }
 
-        const datePicker = document.getElementById('date-picker');
-        datePicker.setAttribute('min', new Date().toLocaleDateString('en-CA'));
-
-        let selectedIndices = [];
-
-        datePicker.onchange = () => {
-            const now = new Date();
-            const selectedDate = new Date(datePicker.value + 'T00:00:00');
-            const isToday = selectedDate.toDateString() === now.toDateString();
-            
-            if(![1,3,5].includes(selectedDate.getDay())) { 
-                datePicker.classList.add('error-border');
-                document.getElementById('date-error').style.display = "block";
-                datePicker.value = ""; return; 
-            }
-
-            datePicker.classList.remove('error-border');
-            document.getElementById('date-error').style.display = "none";
-            
-            const grid = document.getElementById('time-grid');
-            grid.innerHTML = "";
-            document.getElementById('time-section').style.display = "block";
-            selectedIndices = [];
-
-            printerInfo[printer].times.forEach((item, index) => {
-                const isObj = typeof item === 'object';
-                const timeStr = isObj ? item.time : item;
-                const capacity = isObj && item.capacity ? item.capacity : 1;
-                
-                if (isToday) {
-                    const [startTime, modifier] = timeStr.split(' - ')[0].split(' ');
-                    let [hours, mins] = startTime.split(':');
-                    if (hours === '12') hours = '00';
-                    if (modifier === 'PM') hours = parseInt(hours, 10) + 12;
-                    const slotStart = new Date();
-                    slotStart.setHours(hours, mins, 0, 0);
-                    if ((slotStart - now) / 60000 < 60) return;
-                }
-
-                const slot = document.createElement('div');
-                slot.className = 'time-slot';
-                slot.dataset.index = index;
-                if (isObj && item.label) {
-                    const badge = document.createElement('span');
-                    badge.className = 'slot-badge'; badge.innerText = item.label;
-                    slot.appendChild(badge);
-                }
-                const textSpan = document.createElement('span');
-                textSpan.innerText = timeStr;
-                slot.appendChild(textSpan);
-
-                const capSpan = document.createElement('span');
-                capSpan.className = 'capacity-indicator';
-                capSpan.innerText = `${capacity} slot${capacity > 1 ? 's' : ''} available`;
-                slot.appendChild(capSpan);
-
-                slot.onclick = () => handleSlotClick(slot, index);
-                grid.appendChild(slot);
+        function updateVisuals() {
+            const day = new Date(document.getElementById('date-picker').value + 'T00:00:00').getDay();
+            document.querySelectorAll('.time-slot').forEach(s => {
+                const idx = parseInt(s.dataset.index);
+                const isPrepPkg = (day === 1 && (idx === 0 || idx === 1) && selectedIndices.includes(0));
+                s.classList.toggle('selected', selectedIndices.includes(idx));
+                s.classList.toggle('prep-package', isPrepPkg);
             });
-        };
-
-        function handleSlotClick(slotElement, index) {
-            if (printer === "SCARA") {
-                document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
-                slotElement.classList.add('selected');
-                selectedIndices = [index];
-            } else {
-                if (selectedIndices.includes(index)) {
-                    selectedIndices = selectedIndices.filter(i => i !== index);
-                } else if (selectedIndices.length < 2) {
-                    if (selectedIndices.length === 1) {
-                        const first = selectedIndices[0];
-                        if (Math.abs(first - index) === 1) {
-                            selectedIndices.push(index);
-                        } else {
-                            selectedIndices = [index];
-                        }
-                    } else {
-                        selectedIndices.push(index);
-                    }
-                } else {
-                    selectedIndices = [index];
-                }
-
-                document.querySelectorAll('.time-slot').forEach(s => {
-                    const idx = parseInt(s.dataset.index);
-                    if (selectedIndices.includes(idx)) s.classList.add('selected');
-                    else s.classList.remove('selected');
-                });
-            }
             document.getElementById('info-section').style.display = selectedIndices.length > 0 ? "block" : "none";
         }
 
-async function handleConfirm() {
-    const name = document.getElementById('user-name').value;
-    const email = document.getElementById('user-email').value;
-    const group = document.getElementById('group-names').value;
-    const date = document.getElementById('date-picker').value;
-    const selected = document.querySelector('.time-slot.selected');
-    
-    if (!name || !email || !selected) { alert("Please fill all fields."); return; }
+        document.getElementById('date-picker').onchange = function() {
+            const selectedDateStr = this.value;
+            const day = new Date(selectedDateStr + 'T00:00:00').getDay();
+            const now = new Date();
+            const isToday = now.toISOString().split('T')[0] === selectedDateStr;
 
-    const selectedTimes = Array.from(document.querySelectorAll('.time-slot.selected'))
-        .map(s => s.querySelector('span:not(.slot-badge):not(.capacity-indicator)').innerText).join(' & ');
+            if(![1,3,5].includes(day)) { alert("Lab open Mon/Wed/Fri only."); this.value=""; return; }
+            
+            document.getElementById('time-section').style.display = "block";
+            const grid = document.getElementById('time-grid'); grid.innerHTML = "";
+            selectedIndices = [];
+            
+            const activeTimes = (printer === "Super7") ? (day === 1 ? printerInfo.Super7.mondayTimes : printerInfo.Super7.defaultTimes) : printerInfo.SCARA.times;
 
-    // The URL you got from the Google Apps Script deployment
-    const SCRIPT_URL = "YOUR_GOOGLE_SCRIPT_URL_HERE";
+            activeTimes.forEach((item, index) => {
+                const isObj = typeof item === 'object';
+                const timeString = isObj ? item.time : item;
+                const startTimeStr = timeString.split(" - ")[0];
+                const slotStartTime = new Date(selectedDateStr + " " + startTimeStr);
 
-    // Show a "Saving" state (optional: add a spinner here)
-    const btn = document.querySelector('.confirm-btn');
-    btn.innerText = "Saving..."; 
+                // --- 1-HOUR BOOKING BUFFER ---
+                // Hide slot if the current time is within 1 hour of the start time
+                const bufferMs = 60 * 60 * 1000; 
+                if (isToday && (slotStartTime - now) < bufferMs) return;
 
-    try {
-        const response = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify({ name, email, printer, date, time: selectedTimes, group })
-        });
-        const result = await response.json();
+                const slot = document.createElement('div');
+                slot.className = 'time-slot'; slot.dataset.index = index;
+                if (day === 1 && item.isBonus) { slot.style.display = 'none'; slot.id = 'monday-bonus-slot'; }
+                if (isObj && item.label) { slot.innerHTML = `<span class="slot-badge">${item.label}</span>`; }
+                slot.innerHTML += `<span>${timeString}</span>`;
+                grid.appendChild(slot);
 
-        if (result.status === "error") {
-            alert(result.message); // This will show "You already have a booking for this date."
-            btn.innerText = "Complete Reservation";
-        } else {
-            // Success!
-            document.getElementById('modal-details').innerHTML = `<b>${name}</b>, your booking is confirmed!`;
-            document.getElementById('success-modal').classList.add('active');
+                slot.onclick = () => {
+                    if (day === 1 && index === 1 && selectedIndices.includes(0)) return;
+                    if (selectedIndices.includes(index)) {
+                        if (day === 1 && index === 0) resetSlots();
+                        else selectedIndices = selectedIndices.filter(i => i !== index);
+                    } else {
+                        if (day === 1 && index === 0) {
+                            selectedIndices = [0, 1];
+                            document.getElementById('monday-bonus-slot').style.display = 'flex';
+                        } else {
+                            if (day === 1 && selectedIndices.includes(0)) {
+                                if (index === 2) { selectedIndices = [0, 1, 2]; }
+                                else { selectedIndices = [index]; document.getElementById('monday-bonus-slot').style.display = 'none'; }
+                            } else {
+                                let max = (printer === "SCARA" ? 1 : 2);
+                                if (selectedIndices.length === 0) selectedIndices = [index];
+                                else if (selectedIndices.length < max && Math.abs(selectedIndices[selectedIndices.length-1] - index) === 1) {
+                                    selectedIndices.push(index);
+                                    selectedIndices.sort((a,b) => a-b);
+                                } else { selectedIndices = [index]; }
+                                if(document.getElementById('monday-bonus-slot')) document.getElementById('monday-bonus-slot').style.display = 'none';
+                            }
+                        }
+                    }
+                    updateVisuals();
+                };
+            });
+        };
+
+        async function handleConfirm() {
+            const times = Array.from(document.querySelectorAll('.time-slot.selected')).map(s => s.querySelector('span:not(.slot-badge)').innerText).join(' & ');
+            await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'book', name: document.getElementById('user-name').value, email: document.getElementById('user-email').value, printer, date: document.getElementById('date-picker').value, time: times, group: document.getElementById('group-members')?.value }) });
+            alert("Booking Successful!"); location.reload();
         }
-    } catch (err) {
-        alert("Error connecting to server. Try again.");
-        btn.innerText = "Complete Reservation";
-    }
-}
 
-        function toggleManageMode(isM) {
-            document.getElementById('booking-flow').style.display = isM ? 'none' : 'block';
-            document.getElementById('manage-section').style.display = isM ? 'block' : 'none';
+        async function handleManage(action) {
+            const email = document.getElementById('manage-email').value;
+            const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action, email }) });
+            const result = await res.json();
+            if (result.status === "success") {
+                if (action === 'lookup') { document.getElementById('manage-result').style.display = 'block'; document.getElementById('manage-text').innerText = result.details; }
+                else { alert("Cancelled."); location.reload(); }
+            } else alert(result.message);
+        }
+
+        function toggleManage(show) {
+            document.getElementById('booking-flow').style.display = show ? 'none' : 'block';
+            document.getElementById('manage-section').style.display = show ? 'block' : 'none';
         }
     </script>
 </body>
