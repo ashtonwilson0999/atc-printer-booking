@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ATC Staff Dashboard</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; padding: 20px; background: #f4f7f6; }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 900px; margin: auto; }
+        .status-btn { padding: 10px 15px; border-radius: 6px; cursor: pointer; color: white; font-weight: bold; border: none; margin-right: 10px; }
+        .ONLINE { background: #28a745; } .OFFLINE { background: #dc3545; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { text-align: left; padding: 15px; border-bottom: 1px solid #eee; }
+        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f4f7f6; display: flex; align-items: center; justify-content: center; flex-direction: column; z-index: 100; }
+        input[type="password"] { padding: 12px; border-radius: 8px; border: 2px solid #ddd; width: 250px; text-align: center; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div id="login-screen">
+        <h2>ATC Lab Admin</h2>
+        <input type="password" id="pass" placeholder="Password">
+        <button onclick="login()" style="background:#000; color:#fff; padding:10px 30px; border-radius:20px; cursor:pointer;">Access Dashboard</button>
+    </div>
+    <div id="dash" style="display:none;" class="card">
+        <h1>Lab Schedule</h1>
+        <div id="status-controls" style="margin-bottom:30px;"></div>
+        <input type="date" id="dash-date" onchange="loadData()" style="padding:10px; margin-bottom:20px;">
+        <table>
+            <thead><tr><th>Time</th><th>Printer</th><th>Student</th><th>Action</th></tr></thead>
+            <tbody id="table-body"></tbody>
+        </table>
+    </div>
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbCoX7xYXvt4_OE_fCOHHfrU9GX12vLCz1kjJnVKi2NLTt2bJy_M5BVI1sTe0lNk421g/exec";
+        const STAFF_PASS = "ATC_SPRING_2026";
+        let auth = "";
+        function login() { if(document.getElementById('pass').value === STAFF_PASS) { auth = STAFF_PASS; document.getElementById('login-screen').style.display = 'none'; document.getElementById('dash').style.display = 'block'; document.getElementById('dash-date').value = new Date().toLocaleDateString('en-CA'); loadData(); } else alert("Denied"); }
+        async function loadData() {
+            const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'fetch_all', staffKey: auth }) });
+            const data = await res.json();
+            const controls = document.getElementById('status-controls');
+            controls.innerHTML = "";
+            data.statuses.forEach(s => { controls.innerHTML += `<button class="status-btn ${s[1]}" onclick="toggleStatus('${s[0]}', '${s[1]}')">${s[0]}: ${s[1]}</button> `; });
+            const body = document.getElementById('table-body'); body.innerHTML = "";
+            data.bookings.filter(b => b[3] === document.getElementById('dash-date').value).forEach(b => { body.innerHTML += `<tr><td><strong>${b[4]}</strong></td><td>${b[2]}</td><td>${b[0]}<br><small>${b[1]}</small></td><td><button onclick="alert('No-show flagged.')">No Show</button></td></tr>`; });
+        }
+        async function toggleStatus(p, s) { await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'update_status', printer: p, newStatus: s === 'ONLINE' ? 'OFFLINE' : 'ONLINE', staffKey: auth }) }); loadData(); }
+    </script>
+</body>
+</html>
