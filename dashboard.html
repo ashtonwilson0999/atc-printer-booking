@@ -30,7 +30,7 @@
         </table>
     </div>
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbCoX7xYXvt4_OE_fCOHHfrU9GX12vLCz1kjJnVKi2NLTt2bJy_M5BVI1sTe0lNk421g/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwGUido-alIRT3GGfPgprmmEx4lFHetK0CRNWl0xb160ofQRROlaUFAYcBDwpGqXULFCA/exec";
         const STAFF_KEY = "ATC_SPRING_2026";
         let auth = "";
         function login() { if(document.getElementById('pass').value === STAFF_KEY) { auth = STAFF_KEY; document.getElementById('login-screen').style.display = 'none'; document.getElementById('dash').style.display = 'block'; document.getElementById('dash-date').value = new Date().toLocaleDateString('en-CA'); loadData(); } else alert("Denied"); }
@@ -48,4 +48,5 @@
 </body>
 
 </html>
+
 
